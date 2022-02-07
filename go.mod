@@ -1,4 +1,4 @@
-module github.com/ydrobot/golang-url_shotener
+module github.com/ydrobot/golang-url_shortener
 
 go 1.17
 
