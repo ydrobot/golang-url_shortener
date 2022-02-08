@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: api/url_shortener/url_shotener.proto
 
-package url_shotener_pb
+package url_shortener_pb
 
 import (
 	context "context"

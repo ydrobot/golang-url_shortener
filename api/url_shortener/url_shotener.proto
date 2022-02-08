@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package url_shortener;
 
-option go_package = "github.com/ydrobot/golang-url_shortener/pkg/url_shotener_pb";
+option go_package = "github.com/ydrobot/golang-url_shortener/pkg/url_shortener_pb";
 
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
@@ -20,6 +20,7 @@ service UrlShortenerService {
     rpc Remove (RemoveRequest) returns (RemoveResponse) {
         option (google.api.http) = {
             post: "/url/remove"
+            body: "*"
         };
     }
 

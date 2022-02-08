@@ -7,6 +7,9 @@ plugins:
     opt: paths=source_relative
   - name: go-grpc
     out: pkg/url_shotener_pb
-    opt:
-      - paths=source_relative
-      - require_unimplemented_servers=false
+    opt: paths=source_relative,require_unimplemented_servers=false
+  - name: grpc-gateway
+    out: pkg/url_shotener_pb
+    opt: paths=source_relative
+  - name: openapiv2
+    out: pkg/url_shotener_pb
