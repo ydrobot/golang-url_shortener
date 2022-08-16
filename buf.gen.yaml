@@ -3,13 +3,20 @@ managed:
   enabled: true
 plugins:
   - name: go
-    out: pkg/url_shotener_pb
-    opt: paths=source_relative
+    out: pkg
+    opt:
+      - paths=source_relative
   - name: go-grpc
-    out: pkg/url_shotener_pb
-    opt: paths=source_relative,require_unimplemented_servers=false
+    out: pkg
+    opt:
+      - paths=source_relative
   - name: grpc-gateway
-    out: pkg/url_shotener_pb
-    opt: paths=source_relative
+    out: pkg
+    opt:
+      - paths=source_relative
+      - generate_unbound_methods=true
+      - allow_delete_body=true
   - name: openapiv2
-    out: pkg/url_shotener_pb
+    out: pkg
+    opt:
+      - allow_delete_body=true

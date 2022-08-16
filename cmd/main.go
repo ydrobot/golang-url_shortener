@@ -2,46 +2,47 @@ package main
 
 import (
 	"context"
-	"flag"
-	"google.golang.org/grpc/credentials/insecure"
+	"log"
+	"net"
 	"net/http"
 
-	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 
-	url_shortener_pb "github.com/ydrobot/golang-url_shortener/pkg/url_shotener_pb/api/url_shortener"
+	"github.com/ydrobot/golang-url_shortener/internal/app"
+	"github.com/ydrobot/golang-url_shortener/internal/app/url_shortener"
+	desc "github.com/ydrobot/golang-url_shortener/pkg/api/url_shortener"
 )
 
 func main() {
-	flag.Parse()
-	defer glog.Flush()
+	// Interceptors
+	grpcOpts := app.GrpcInterceptor()
+	httpOpts := app.HttpInterceptor()
 
-	if err := run(); err != nil {
-		glog.Fatal(err)
+	go runGRPC(grpcOpts)
+	runHTTP(httpOpts)
+}
+func runGRPC(grpcOpts grpc.ServerOption) {
+	listener, err := net.Listen("tcp", "localhost:8081")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	grpcServer := grpc.NewServer(grpcOpts)
+	desc.RegisterUrlShortenerServiceServer(grpcServer, url_shortener.NewURLShortenerService())
+
+	err = grpcServer.Serve(listener)
+	if err != nil {
+		log.Fatalln(err)
 	}
 }
 
-var (
-	// command-line options:
-	// gRPC server endpoint
-	grpcServerEndpoint = flag.String("grpc-server-endpoint", "localhost:9090", "gRPC server endpoint")
-)
-
-func run() error {
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
-
-	// Register gRPC server endpoint
-	// Note: Make sure the gRPC server is running properly and accessible
-	mux := runtime.NewServeMux()
-	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	err := url_shortener_pb.RegisterUrlShortenerServiceHandlerFromEndpoint(ctx, mux, *grpcServerEndpoint, opts)
+func runHTTP(httpOpts runtime.ServeMuxOption) {
+	mux := runtime.NewServeMux(httpOpts, app.HttpMarshalerOption())
+	err := desc.RegisterUrlShortenerServiceHandlerServer(context.Background(), mux, url_shortener.NewURLShortenerService())
 	if err != nil {
-		return err
+		log.Println("cannot register this service")
 	}
 
-	// Start HTTP server (and proxy calls to gRPC server endpoint)
-	return http.ListenAndServe(":8081", mux)
+	log.Fatalln(http.ListenAndServe(":8080", mux))
 }

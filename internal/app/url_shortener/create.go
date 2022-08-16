@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	url_shortener "github.com/ydrobot/golang-url_shortener/pkg/url_shotener_pb/api/url_shortener"
+	url_shortener "github.com/ydrobot/golang-url_shortener/pkg/api/url_shortener"
 )
 
 func (i *URLShortenerServiceImplementation) Create(context.Context, *url_shortener.CreateRequest) (*url_shortener.CreateResponse, error) {
