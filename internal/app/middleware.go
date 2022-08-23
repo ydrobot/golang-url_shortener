@@ -22,7 +22,6 @@ func GrpcInterceptor() grpc.ServerOption {
 				return nil, err
 			}
 		}
-		resp, err = handler(ctx, req)
 		return handler(ctx, req)
 	})
 	return grpcServerOptions
