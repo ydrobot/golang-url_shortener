@@ -11,6 +11,7 @@ import (
 
 	"github.com/ydrobot/golang-url_shortener/internal/app"
 	"github.com/ydrobot/golang-url_shortener/internal/app/url_shortener"
+	"github.com/ydrobot/golang-url_shortener/internal/domain"
 	desc "github.com/ydrobot/golang-url_shortener/pkg/api/url_shortener"
 )
 
@@ -19,9 +20,11 @@ func main() {
 	grpcOpts := app.GrpcInterceptor()
 	httpOpts := app.HttpInterceptor()
 
+	// TODO: порты вынести в докер
 	go runGRPC(grpcOpts)
 	runHTTP(httpOpts)
 }
+
 func runGRPC(grpcOpts grpc.ServerOption) {
 	listener, err := net.Listen("tcp", "localhost:8081")
 	if err != nil {
@@ -29,7 +32,7 @@ func runGRPC(grpcOpts grpc.ServerOption) {
 	}
 
 	grpcServer := grpc.NewServer(grpcOpts)
-	desc.RegisterUrlShortenerServiceServer(grpcServer, url_shortener.NewURLShortenerService())
+	desc.RegisterUrlShortenerServiceServer(grpcServer, url_shortener.NewURLShortenerService(domain.NewShortenerService(nil)))
 
 	err = grpcServer.Serve(listener)
 	if err != nil {
@@ -39,7 +42,7 @@ func runGRPC(grpcOpts grpc.ServerOption) {
 
 func runHTTP(httpOpts runtime.ServeMuxOption) {
 	mux := runtime.NewServeMux(httpOpts, app.HttpMarshalerOption())
-	err := desc.RegisterUrlShortenerServiceHandlerServer(context.Background(), mux, url_shortener.NewURLShortenerService())
+	err := desc.RegisterUrlShortenerServiceHandlerServer(context.Background(), mux, url_shortener.NewURLShortenerService(domain.NewShortenerService(nil)))
 	if err != nil {
 		log.Println("cannot register this service")
 	}
