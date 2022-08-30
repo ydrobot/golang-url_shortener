@@ -103,15 +103,16 @@
         ]
       }
     },
-    "/url/{url}": {
+    "/{url}": {
       "get": {
-        "summary": "Get full url by short",
-        "operationId": "UrlShortenerService_GetFullURL",
+        "summary": "Redirect",
+        "operationId": "UrlShortenerService_Redirect",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/url_shortenerGetFullURLResponse"
+              "type": "object",
+              "properties": {}
             }
           },
           "default": {
@@ -187,14 +188,6 @@
       }
     },
     "url_shortenerCreateResponse": {
-      "type": "object",
-      "properties": {
-        "url": {
-          "type": "string"
-        }
-      }
-    },
-    "url_shortenerGetFullURLResponse": {
       "type": "object",
       "properties": {
         "url": {

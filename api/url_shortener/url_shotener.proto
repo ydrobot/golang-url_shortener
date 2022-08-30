@@ -6,6 +6,7 @@ option go_package = "github.com/ydrobot/golang-url_shortener/pkg/url_shortener_p
 
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 
 service UrlShortenerService {
 
@@ -24,10 +25,10 @@ service UrlShortenerService {
         };
     }
 
-    // Get full url by short
-    rpc GetFullURL(GetFullURLRequest) returns (GetFullURLResponse) {
+    // Redirect
+    rpc Redirect(RedirectRequest) returns (google.protobuf.Empty) {
         option (google.api.http) = {
-            get: "/url/{url}"
+            get: "/{url}"
         };
     }
 
@@ -54,12 +55,11 @@ message RemoveRequest {
 message RemoveResponse {
 }
 
-message GetFullURLRequest {
+message RedirectRequest {
     string url = 1;
 }
 
-message GetFullURLResponse {
-    string url = 1;
+message RedirectResponse {
 }
 
 

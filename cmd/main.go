@@ -41,7 +41,10 @@ func runGRPC(grpcOpts grpc.ServerOption) {
 }
 
 func runHTTP(httpOpts runtime.ServeMuxOption) {
-	mux := runtime.NewServeMux(httpOpts, app.HttpMarshalerOption())
+	mux := runtime.NewServeMux(httpOpts,
+		app.HttpMarshalerOption(),
+		runtime.WithForwardResponseOption(app.ResponseHeaderMatcher))
+
 	err := desc.RegisterUrlShortenerServiceHandlerServer(context.Background(), mux, url_shortener.NewURLShortenerService(domain.NewShortenerService(nil)))
 	if err != nil {
 		log.Println("cannot register this service")

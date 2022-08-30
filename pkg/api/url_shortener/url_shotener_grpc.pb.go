@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -26,8 +27,8 @@ type UrlShortenerServiceClient interface {
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	// Remove short url
 	Remove(ctx context.Context, in *RemoveRequest, opts ...grpc.CallOption) (*RemoveResponse, error)
-	// Get full url by short
-	GetFullURL(ctx context.Context, in *GetFullURLRequest, opts ...grpc.CallOption) (*GetFullURLResponse, error)
+	// Redirect
+	Redirect(ctx context.Context, in *RedirectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Get all urls with short
 	GetList(ctx context.Context, in *GetListRequest, opts ...grpc.CallOption) (*GetListResponse, error)
 }
@@ -58,9 +59,9 @@ func (c *urlShortenerServiceClient) Remove(ctx context.Context, in *RemoveReques
 	return out, nil
 }
 
-func (c *urlShortenerServiceClient) GetFullURL(ctx context.Context, in *GetFullURLRequest, opts ...grpc.CallOption) (*GetFullURLResponse, error) {
-	out := new(GetFullURLResponse)
-	err := c.cc.Invoke(ctx, "/url_shortener.UrlShortenerService/GetFullURL", in, out, opts...)
+func (c *urlShortenerServiceClient) Redirect(ctx context.Context, in *RedirectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/url_shortener.UrlShortenerService/Redirect", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,8 +85,8 @@ type UrlShortenerServiceServer interface {
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	// Remove short url
 	Remove(context.Context, *RemoveRequest) (*RemoveResponse, error)
-	// Get full url by short
-	GetFullURL(context.Context, *GetFullURLRequest) (*GetFullURLResponse, error)
+	// Redirect
+	Redirect(context.Context, *RedirectRequest) (*emptypb.Empty, error)
 	// Get all urls with short
 	GetList(context.Context, *GetListRequest) (*GetListResponse, error)
 	mustEmbedUnimplementedUrlShortenerServiceServer()
@@ -101,8 +102,8 @@ func (UnimplementedUrlShortenerServiceServer) Create(context.Context, *CreateReq
 func (UnimplementedUrlShortenerServiceServer) Remove(context.Context, *RemoveRequest) (*RemoveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Remove not implemented")
 }
-func (UnimplementedUrlShortenerServiceServer) GetFullURL(context.Context, *GetFullURLRequest) (*GetFullURLResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFullURL not implemented")
+func (UnimplementedUrlShortenerServiceServer) Redirect(context.Context, *RedirectRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Redirect not implemented")
 }
 func (UnimplementedUrlShortenerServiceServer) GetList(context.Context, *GetListRequest) (*GetListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetList not implemented")
@@ -156,20 +157,20 @@ func _UrlShortenerService_Remove_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UrlShortenerService_GetFullURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFullURLRequest)
+func _UrlShortenerService_Redirect_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RedirectRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UrlShortenerServiceServer).GetFullURL(ctx, in)
+		return srv.(UrlShortenerServiceServer).Redirect(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/url_shortener.UrlShortenerService/GetFullURL",
+		FullMethod: "/url_shortener.UrlShortenerService/Redirect",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UrlShortenerServiceServer).GetFullURL(ctx, req.(*GetFullURLRequest))
+		return srv.(UrlShortenerServiceServer).Redirect(ctx, req.(*RedirectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -208,8 +209,8 @@ var UrlShortenerService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UrlShortenerService_Remove_Handler,
 		},
 		{
-			MethodName: "GetFullURL",
-			Handler:    _UrlShortenerService_GetFullURL_Handler,
+			MethodName: "Redirect",
+			Handler:    _UrlShortenerService_Redirect_Handler,
 		},
 		{
 			MethodName: "GetList",
