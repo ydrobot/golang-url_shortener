@@ -1,0 +1,8 @@
+env: "local"
+storage_path: "./storage/storage.db" # Path to the SQLite database
+http_server:
+  address: "localhost:8082"
+  timeout: 4s # Timeout for HTTP requests
+  idle_timeout: 60s # Timeout for idle HTTP connections время жизни соединение сервиса, время ждем повтороного клиента на соединение. HTTP автоматически закрывает соединение после 60 секунд бездействия, а до этого использует одно и то же соединение для всех запросов.
+  user: admin
+  password: admin

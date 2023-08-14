@@ -1,0 +1,249 @@
+# This file contains all available configuration options
+# with their default values.
+
+# options for analysis running
+run:
+  go: '1.21'
+
+  # timeout for analysis, e.g. 30s, 5m, default is 1m
+  deadline: 10m
+
+  # exit code when at least one issue was found, default is 1
+  issues-exit-code: 1
+
+  # include test files or not, default is true
+  tests: false
+
+  # which dirs to skip: they won't be analyzed;
+  # can use regexp here: generated.*, regexp is applied on full path;
+  # default value is empty list, but next dirs are always skipped independently
+  # from this option's value:
+  #   	vendor$, third_party$, testdata$, examples$, Godeps$, builtin$
+  skip-dirs:
+    -
+
+#  modules-download-mode: vendor
+
+# output configuration options
+output:
+  # colored-line-number|line-number|json|tab|checkstyle|code-climate, default is "colored-line-number"
+  format: colored-line-number
+
+  # print lines of code with issue, default is true
+  print-issued-lines: true
+
+  # print linter name in the end of issue text, default is true
+  print-linter-name: true
+
+linters: # golangci-lint linters --config=.golangci_critical.yml
+  disable-all: true
+  enable:
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - containedctx
+#    - depguard
+    - dogsled
+    - durationcheck
+    - errcheck
+    - errname
+    - errorlint
+    - exhaustive
+#    - exhaustruct
+    - exportloopref
+    - forbidigo
+    - forcetypeassert
+    - gocritic
+    - gofmt
+    - goimports
+    - gomodguard
+    - goprintffuncname
+    - gosimple
+    - govet
+    - ineffassign
+    - makezero
+    - nakedret
+    - nilerr
+#    - noctx
+    - nosprintfhostport
+    - prealloc
+    - predeclared
+    - revive
+    - rowserrcheck
+    - staticcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - wastedassign
+#    - wrapcheck
+    - gci
+    - asasalint
+    - decorder
+    - musttag
+
+issues:
+  # Maximum issues count per one linter. Set to 0 to disable. Default is 50.
+  max-issues-per-linter: 0
+
+  # Maximum count of issues with the same text. Set to 0 to disable. Default is 3.
+  max-same-issues: 0
+
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    # Exclude some staticcheck messages
+    - linters:
+        - staticcheck
+      text: "SA9003:"
+
+    - linters:
+        - gosimple
+      text: "S1008:"
+
+    - linters:
+        - staticcheck
+      text: "SA1019:"
+
+    - linters:
+        - revive
+      text: "exported: exported"
+
+    - linters:
+        - revive
+      text: "exported: comment on exported"
+
+    - linters:
+        - revive
+      text: "modifies-parameter"
+
+    - linters:
+      - revive
+      text: "error-strings"
+
+    # Exclude lll issues for long lines with go:generate
+    - linters:
+        - lll
+      source: "^//go:generate "
+
+
+linters-settings:
+  wrapcheck:
+    ignoreSigs:
+      - helpers.GetHotconfJSON(
+      - as.NewKey(
+      - json.Marshal(
+      - json.Unmarshal(
+      - .Errorf(
+      - errors.New(
+
+  revive:
+    # see https://github.com/mgechev/revive#available-rules for details.
+    ignore-generated-header: true
+    severity: warning
+    error-code: 1
+    warning-code: 0
+    rules:
+      - name: context-keys-type
+        severity: warning
+      - name: time-naming
+        severity: warning
+      - name: var-declaration
+        severity: warning
+      - name: unexported-return
+        severity: warning
+      - name: errorf
+        severity: warning
+      - name: blank-imports
+        severity: warning
+      - name: context-as-argument
+        severity: warning
+      - name: dot-imports
+        severity: warning
+      - name: error-return
+        severity: warning
+      - name: error-strings
+        severity: warning
+      - name: error-naming
+        severity: warning
+      - name: if-return
+        severity: warning
+      - name: increment-decrement
+        severity: warning
+      - name: var-naming
+        severity: warning
+      - name: package-comments
+        severity: warning
+      - name: range
+        severity: warning
+      - name: receiver-naming
+        severity: warning
+      - name: indent-error-flow
+        severity: warning
+      - name: modifies-value-receiver
+        severity: warning
+      - name: string-of-int
+        severity: warning
+      - name: waitgroup-by-value
+        severity: warning
+      - name: unreachable-code
+        severity: warning
+      - name: identical-branches
+        severity: warning
+      - name: defer
+        severity: warning
+      - name: unconditional-recursion
+        severity: warning
+      - name: early-return
+        severity: warning
+      - name: string-of-int
+        severity: warning
+#      - name: unused-receiver # нужно править
+#        severity: warning
+      - name: import-shadowing
+        severity: warning
+      - name: duplicated-imports
+        severity: warning
+      - name: atomic
+        severity: warning
+      - name: range-val-address
+        severity: warning
+      - name: range-val-in-closure
+        severity: warning
+      - name: redefines-builtin-id
+        severity: warning
+      - name: bool-literal-in-expr
+        severity: warning
+      - name: constant-logical-expr
+        severity: warning
+      - name: modifies-value-receiver
+        severity: warning
+      - name: unnecessary-stmt
+        severity: warning
+      - name: unused-parameter
+        severity: warning
+      - name: modifies-parameter
+        severity: warning
+      - name: useless-break
+        severity: warning
+      - name: unexported-naming
+        severity: warning
+      - name: bare-return
+        severity: warning
+      - name: struct-tag
+        severity: warning
+      - name: get-return
+        severity: warning
+      - name: superfluous-else
+        severity: warning
+
+  gci:
+    sections:
+      - standard
+      - default
+      - prefix(github.com)
+      - prefix(github.com/ydrobot/golang-url_shortener)
+      - prefix(golang-url_shortener)
+    skip-generated: true
+    custom-order: true
+
