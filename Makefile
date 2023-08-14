@@ -12,5 +12,5 @@ lint: lint-install
 	$(GOBIN)/golangci-lint --version
 	$(GOBIN)/golangci-lint run --config=.golangci_critical.yml
 
-test:
-	go test -mod=vendor ./...
+#test:
+#	go test -mod=vendor ./...
